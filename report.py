@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 class ReportClass:
     def __init__(self, root):
         self.root = root
-        self.root.title("Student Result Management System")
+        self.root.title("College Management System")
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         self.root.geometry(f"{screen_width}x{screen_height}+0+0")
@@ -36,7 +36,7 @@ class ReportClass:
 
         # ===== Result Display Area =====
         self.result_frame = Frame(self.root, bd=2, relief=RIDGE)
-        self.result_frame.place(x=260, y=250, width=950, height=400)
+        self.result_frame.place(x=260, y=250, width=1020, height=400)
 
         scroll_x = Scrollbar(self.result_frame, orient=HORIZONTAL)
         scroll_y = Scrollbar(self.result_frame, orient=VERTICAL)
@@ -62,16 +62,16 @@ class ReportClass:
         self.result_table.heading("marks_obtained", text="Marks Obtained", anchor=CENTER)
         self.result_table.heading("max_marks", text="Total Marks", anchor=CENTER)
         self.result_table.heading("percentage", text="Percentage", anchor=CENTER)
-        self.result_table.heading("overall_percentage", text="Overall Percentage", anchor=CENTER)
+        self.result_table.heading("overall_percentage", text="Overall", anchor=CENTER)
 
         self.result_table["show"] = "headings"
         self.result_table.column("roll", anchor=CENTER, width=100)
         self.result_table.column("name", anchor=CENTER, width=130)
         self.result_table.column("subject", anchor=CENTER, width=130)
-        self.result_table.column("marks_obtained", anchor=CENTER, width=140)
+        self.result_table.column("marks_obtained", anchor=CENTER, width=155)
         self.result_table.column("max_marks", anchor=CENTER, width=120)
         self.result_table.column("percentage", anchor=CENTER, width=120)
-        self.result_table.column("overall_percentage", anchor=CENTER, width=160)  # Added this column for overall percentage
+        self.result_table.column("overall_percentage", anchor=CENTER, width=150)  # Added this column for overall percentage
         self.result_table.pack(fill=BOTH, expand=1)
 
     def fetch_classes(self):
@@ -96,7 +96,7 @@ class ReportClass:
                 return
 
             # Check if the roll number exists for the selected class
-            cur.execute("SELECT roll, student_name FROM Students WHERE roll=? AND student_class=(SELECT class_name FROM Classes WHERE class_name=?)",
+            cur.execute("SELECT roll, student_name FROM Students WHERE roll=? AND student_class=(SELECT class_id FROM Classes WHERE class_name=?)",
                         (self.var_search.get(), self.var_class.get()))
             student = cur.fetchone()
 

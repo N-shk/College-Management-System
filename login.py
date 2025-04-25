@@ -17,7 +17,7 @@ class Login_system:
         self.root.config(bg="white")
         self.root.config(bg="white")
         #====images====
-        self.bg_img=Image.open("login.jpg")
+        self.bg_img=Image.open("images/login.png")
         self.bg_img = self.bg_img.resize((self.root.winfo_screenwidth(), root.winfo_screenheight()), Image.LANCZOS)
         self.bg_img=ImageTk.PhotoImage(self.bg_img)
         self.lbl_bg=Label(self.root,image=self.bg_img).place(relwidth=1,relheight=1)
@@ -56,9 +56,10 @@ class Login_system:
                     messagebox.showerror("Error","Invalid username or password",parent=self.root)
                 else:
                     role = row[7]
+                    class_name = row[8]
                     messagebox.showinfo("Success",f"Welcome {self.email.get()}",parent=self.root)
                     self.root.destroy()
-                    os.system(f"python dashboard.py {role}")
+                    os.system(f"python dashboard.py {role} {class_name}")
                  
                 con.close()
             except Exception as es:

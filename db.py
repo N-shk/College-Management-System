@@ -10,3 +10,5 @@ def get_connection():
     """Create and return a connection to the SQLite database."""
     conn = sqlite3.connect(db_path)
     return conn
+
+

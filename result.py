@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 class ResultClass:
     def __init__(self, root):
         self.root = root
-        self.root.title("Student Result Management System")
+        self.root.title("College Management System")
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         self.root.geometry(f"{screen_width}x{screen_height}+0+0")
@@ -15,7 +15,7 @@ class ResultClass:
         self.root.focus_force()
 
         # Title
-        title = Label(self.root, text="Add Student Result", font=("georgia", 23, "bold"), bg="orange", fg="#262626")
+        title = Label(self.root, text="Add Student Result", font=("georgia", 20, "bold"), bg="orange", fg="#262626")
         title.place(x=0, y=0, relwidth=1, height=50)
 
         # Variables
@@ -81,7 +81,7 @@ class ResultClass:
             cur.execute("""
                 SELECT roll 
                 FROM Students 
-                WHERE student_class=?""", (class_name,))
+                WHERE student_class=(SELECT class_id FROM Classes WHERE class_name=?)""", (class_name,))
             rolls = cur.fetchall()
             if rolls:
                 self.txt_roll['values'] = [roll[0] for roll in rolls]
@@ -98,8 +98,8 @@ class ResultClass:
         cur = con.cursor()
         try:
             roll_no = self.var_roll.get()
-            student_class = self.var_class.get() 
-            cur.execute("SELECT student_name FROM Students WHERE roll=? AND student_class=?", (roll_no, student_class))
+            student_class = self.var_class.get()
+            cur.execute("SELECT student_name FROM Students WHERE roll=? AND student_class=(SELECT class_id FROM Classes WHERE class_name=?)", (roll_no, student_class))
             row = cur.fetchone()
             if row:
                 self.var_name.set(row[0])
@@ -141,6 +141,10 @@ class ResultClass:
                 messagebox.showerror("Error", "All fields are required!", parent=self.root)
                 return
 
+            cur.execute("""delete from Results where class_id = (SELECT class_id FROM classes WHERE class_name=?)
+                         And roll = ? And subject_id = (SELECT subject_id FROM Subjects WHERE subject_name=?)""",(self.var_class.get(),self.var_roll.get(),self.var_subject.get()))
+            con.commit()
+            
             cur.execute(
                 """
                 INSERT INTO Results (roll ,class_id,subject_id, marks_obtained, max_marks) 
