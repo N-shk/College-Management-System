@@ -15,7 +15,7 @@ class log:
         self.root.geometry(f"{screen_width}x{screen_height}+0+0")
         self.root.config(bg="white")
         
-        self.bg_img=Image.open("register.jpg")
+        self.bg_img=Image.open("images/register.jpg")
         self.bg_img = self.bg_img.resize((self.root.winfo_screenwidth(), root.winfo_screenheight()), Image.LANCZOS)
         self.bg_img=ImageTk.PhotoImage(self.bg_img)
         self.lbl_bg=Label(self.root,image=self.bg_img).place(relwidth=1,relheight=1)
@@ -27,11 +27,12 @@ class log:
         self.var_email=StringVar()
         self.var_setPass=StringVar()
         self.var_answer=StringVar()
+        self.var_classname=StringVar()
         self.roll_list=[]
         self.var_role = StringVar()
         self.var_terms=IntVar()
         values = ["Security Question","Nick name ?","Favourite color ?","First School name ?"]
-        roles = ["Select Role", "Admin", "Student"]
+        roles = ["Select Role","HOD", "Admin", "Student"]
         
         title=Label(self.root,text="Register",font=("georgia",28,"bold"),bg="#0E05A0",fg="white").place(relx=0.5,rely=0.14, anchor='center')
 
@@ -80,10 +81,10 @@ class log:
         self.entry5.bind("<FocusOut>", lambda event: (self.entry5.insert(0, "Set Password"), self.entry5.configure(foreground="white",bg="grey")) if self.entry5.get() == "" else None)
         self.entry5.place(relx=0.32,rely=0.466)
         
-        self.entry6 = Entry(root, font=("goudy old style",19,"bold"),width=15,bg="grey",foreground="white",highlightcolor="white",justify=CENTER)
-        self.entry6.insert(0, "Confirm Password")
-        self.entry6.bind("<FocusIn>", lambda event: (self.entry6.delete(0, END),self.entry6.configure(highlightthickness=1,highlightcolor="white",foreground="white",bg="grey")) if self.entry6.get() == "Confirm Password" else None)
-        self.entry6.bind("<FocusOut>", lambda event: (self.entry6.insert(0, "Confirm Password"), self.entry6.configure(foreground="white",bg="grey")) if self.entry6.get() == "" else None)
+        self.entry6 = Entry(root,textvariable=self.var_classname, font=("goudy old style",19,"bold"),width=15,bg="grey",foreground="white",highlightcolor="white",justify=CENTER)
+        self.entry6.insert(0, "Enter Class")
+        self.entry6.bind("<FocusIn>", lambda event: (self.entry6.delete(0, END),self.entry6.configure(highlightthickness=1,highlightcolor="white",foreground="white",bg="grey")) if self.entry6.get() == "Enter Class" else None)
+        self.entry6.bind("<FocusOut>", lambda event: (self.entry6.insert(0, "Enter Class"), self.entry6.configure(foreground="white",bg="grey")) if self.entry6.get() == "" else None)
         self.entry6.place(relx=0.544,rely=0.466)
         underline_font = font.Font(self.root,size=14,underline=True)
         btn_reg=Button(self.root,text="Login here !!",font=underline_font,bd=0,bg="black",fg="white",activeforeground="white",activebackground="black",cursor="hand2",command=self.login_window).place(relx=0.61,rely=0.74)
@@ -107,8 +108,6 @@ class log:
     def register_data(self):
         if self.entry1.get()=="" or self.entry2.get()=="" or self.entry3.get()=="" or self.entry4.get()=="" or self.entry6.get()=="" or self.question.get()=="Security Question" or self.var_role.get() == "Select Role":
             messagebox.showerror("Error","All Fields are Required",parent=self.root)
-        elif self.entry5.get()!=self.entry6.get():
-            messagebox.showerror("Error","Passord and Confirm Password should be same.",parent=self.root)
         elif self.var_terms.get()==0:
             messagebox.showerror("Error","Please agree the terms and conditions.",parent=self.root)
         else:
@@ -120,15 +119,15 @@ class log:
                 if row is not None:  #row!=None
                     messagebox.showerror("Error","User already exist, try with another email.",parent=self.root)
                 else:        
-                    cur.execute("insert into users (first_name,last_name,email,security_question,security_answer,password,role) values(?,?,?,?,?,?,?)",
+                    cur.execute("insert into users (first_name,last_name,email,security_question,security_answer,password,role,class_name) values(?,?,?,?,?,?,?,?)",
                                 (self.var_fname.get(),
                                  self.var_lname.get(),
                                  self.var_email.get(),
                                  self.var_question.get(),
                                  self.var_answer.get(),
                                  self.var_setPass.get(),
-                                 self.var_role.get()
-                                 
+                                 self.var_role.get(),
+                                 self.var_classname.get()
                                  ))
                     con.commit()
                     con.close()
